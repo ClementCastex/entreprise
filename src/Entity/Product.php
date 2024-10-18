@@ -2,10 +2,8 @@
 
 namespace App\Entity;
 
-use ORM\Entity;
-use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Contrat;
+use App\Entity\QuantityType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
@@ -31,19 +29,6 @@ class Product
 
 
     /**
-     * @var Collection<int, ProductType>
-     */
-    #[ORM\ManyToMany(targetEntity: ProductType::class, inversedBy: 'products')]
-    private Collection $type;
-
-    public function __construct()
-    {
-        $this->type = new ArrayCollection();
-    }
-
-
-
-    /**
      * @var Collection<int, Contrat>
      */
     #[ORM\ManyToMany(targetEntity: Contrat::class, mappedBy: 'product')]
@@ -61,7 +46,6 @@ class Product
     {
         $this->contrats = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -106,20 +90,6 @@ class Product
     }
 
 
-    /**
-     * @return Collection<int, ProductType>
-     */
-    public function getType(): Collection
-    {
-        return $this->type;
-    }
-
-    public function addType(ProductType $type): static
-    {
-        if (!$this->type->contains($type)) {
-            $this->type->add($type);
-
-
 
     /**
      * @return Collection<int, Contrat>
@@ -143,16 +113,10 @@ class Product
     {
         if ($this->contrats->removeElement($contrat)) {
             $contrat->removeProduct($this);
-
         }
 
         return $this;
     }
-
-
-    public function removeType(ProductType $type): static
-    {
-        $this->type->removeElement($type);
 
 
     public function getQuantity(): ?int
@@ -175,7 +139,6 @@ class Product
     public function setQuantityType(?QuantityType $quantityType): static
     {
         $this->quantityType = $quantityType;
-
 
         return $this;
     }
